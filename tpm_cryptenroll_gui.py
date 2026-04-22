@@ -29,6 +29,9 @@ TR = {
         'check_sb': "Secure Boot activé",
         'check_ok': "Système compatible !",
         'check_fail': "Incompatibilité détectée",
+        'missing_deps': "Outils manquants à installer :",
+        'missing_sb': "Secure Boot non détecté (à activer dans le BIOS/UEFI).",
+        'not_linux': "Ce programme nécessite un système d'exploitation Linux.",
         'btn_continue': "Continuer",
         'desc': "Sécurisez facilement le déchiffrement de vos disques LUKS \navec la puce TPM de votre ordinateur.",
         'step1': "1. Sélectionnez vos disques LUKS",
@@ -72,6 +75,9 @@ TR = {
         'check_sb': "Secure Boot enabled",
         'check_ok': "System compatible!",
         'check_fail': "Incompatibility detected",
+        'missing_deps': "Missing tools to install:",
+        'missing_sb': "Secure Boot not detected (enable it in BIOS/UEFI).",
+        'not_linux': "This program requires a Linux operating system.",
         'btn_continue': "Continue",
         'desc': "Easily secure the decryption of your LUKS disks \nusing your computer's TPM chip.",
         'step1': "1. Select your LUKS disks",
@@ -113,7 +119,8 @@ class CompatibilityDialog(QDialog):
     def __init__(self):
         super().__init__()
         self.setWindowTitle(T['check_title'])
-        self.setFixedSize(400, 320)
+        # Agrandissement de la fenêtre pour avoir la place d'afficher les paquets manquants
+        self.setFixedSize(450, 420)
         self.setWindowFlags(Qt.WindowType.WindowStaysOnTopHint | Qt.WindowType.CustomizeWindowHint | Qt.WindowType.WindowTitleHint)
 
         layout = QVBoxLayout(self)
@@ -121,6 +128,7 @@ class CompatibilityDialog(QDialog):
 
         self.title_lbl = QLabel(T['check_wait'])
         self.title_lbl.setStyleSheet("font-weight: bold; font-size: 14px; margin-bottom: 10px;")
+        self.title_lbl.setWordWrap(True) # Permet au texte d'aller à la ligne si nécessaire
         layout.addWidget(self.title_lbl)
 
         # Liste des composants à vérifier
@@ -153,6 +161,7 @@ class CompatibilityDialog(QDialog):
 
     def run_checks(self):
         results = []
+        missing_tools = []
 
         # 1. OS
         is_linux = sys.platform.startswith('linux')
@@ -163,16 +172,19 @@ class CompatibilityDialog(QDialog):
         has_crypt = shutil.which("systemd-cryptenroll") is not None
         self.labels['crypt'].setText("✅" if has_crypt else "❌")
         results.append(has_crypt)
+        if not has_crypt: missing_tools.append("- systemd-cryptenroll (paquet: systemd)")
 
         # 3. Polkit
         has_pk = shutil.which("pkexec") is not None
         self.labels['polkit'].setText("✅" if has_pk else "❌")
         results.append(has_pk)
+        if not has_pk: missing_tools.append("- pkexec (paquet: polkit)")
 
         # 4. lsblk
         has_ls = shutil.which("lsblk") is not None
         self.labels['lsblk'].setText("✅" if has_ls else "❌")
         results.append(has_ls)
+        if not has_ls: missing_tools.append("- lsblk (paquet: util-linux)")
 
         # 5. Secure Boot
         has_sb = False
@@ -198,7 +210,23 @@ class CompatibilityDialog(QDialog):
             self.btn_next.setStyleSheet("background-color: #2b5797; color: white; padding: 5px 20px;")
             QTimer.singleShot(3000, self.accept)
         else:
-            self.title_lbl.setText(f"<font color='red'>{T['check_fail']}</font>")
+            # Affichage des erreurs avec instructions d'installations
+            error_html = f"<font color='red'>{T['check_fail']}</font>"
+            suggestions = []
+
+            if not is_linux:
+                suggestions.append(T['not_linux'])
+            if missing_tools:
+                pkg_word = "paquet" if LANG == 'fr' else "package"
+                tools_list = "<br>".join(missing_tools).replace("paquet:", f"{pkg_word}:")
+                suggestions.append(f"<b>{T['missing_deps']}</b><br>{tools_list}")
+            if not has_sb and is_linux:
+                suggestions.append(f"<b>Info:</b> {T['missing_sb']}")
+
+            if suggestions:
+                error_html += "<br><br><span style='font-size: 12px; font-weight: normal; color: #d9534f;'>" + "<br><br>".join(suggestions) + "</span>"
+
+            self.title_lbl.setText(error_html)
             self.btn_next.setText(T['close'])
             self.btn_next.setEnabled(True)
             self.btn_next.clicked.disconnect()
