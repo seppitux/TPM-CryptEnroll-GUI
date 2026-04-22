@@ -23,9 +23,28 @@ Cette interface graphique (GUI) simplifie l'utilisation de `systemd-cryptenroll`
 #### Option 1 : Utiliser le binaire (Recommandé)
 1. Téléchargez le fichier exécutable depuis l'onglet [**Releases**](../../releases).
 2. Donnez-lui les droits d'exécution :
-   ```
+   
+```
    chmod +x tpm-cryptenroll-gui
-   ```
+```
+#### Option 2 : Execution du script python
+   
+1. installer les dependances :
+
+**Debian / Ubuntu :**
+```bash
+sudo apt update
+sudo apt install python3-pyqt6 systemd polkitd util-linux mokutil cryptsetup
+```
+**Fedora :**
+```bash
+sudo dnf install python3-pyqt6 systemd polkit util-linux mokutil cryptsetup
+```
+2. executer le scripte :
+```bash
+python3 tpm_cryptenroll_gui.py
+```
+
    
    # 🛡️ TPM Cryptenroll GUI
 
@@ -51,5 +70,25 @@ This Graphical User Interface (GUI) simplifies the use of `systemd-cryptenroll` 
 #### Option 1: Use the Binary (Recommended)
 1. Download the executable file from the [**Releases**](../../releases) tab.
 2. Grant execution permissions:
-   ```bash
+```bash
    chmod +x tpm-cryptenroll-gui
+```
+
+#### Option 2 : Python script execution
+   
+1. Install the dependencies :
+
+**Debian / Ubuntu :**
+```bash
+sudo apt update
+sudo apt install python3-pyqt6 systemd polkitd util-linux mokutil cryptsetup
+```
+**Fedora :**
+```bash
+sudo dnf install python3-pyqt6 systemd polkit util-linux mokutil cryptsetup
+```
+2. Execute the script :
+```bash
+python3 tpm_cryptenroll_gui.py
+```
+
