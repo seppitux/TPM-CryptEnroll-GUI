@@ -23,10 +23,10 @@ Cette interface graphique (GUI) simplifie l'utilisation de `systemd-cryptenroll`
 #### Option 1 : Utiliser le binaire (Recommandé)
 1. Téléchargez le fichier exécutable depuis l'onglet [**Releases**](../../releases).
 2. Donnez-lui les droits d'exécution :
-   ```bash
+   ```
    chmod +x tpm-cryptenroll-gui
-
-
+   ```
+   
    # 🛡️ TPM Cryptenroll GUI
 
 [**Français**](#français) | [**English**](#english)
