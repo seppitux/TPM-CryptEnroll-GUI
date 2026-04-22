@@ -1,11 +1,8 @@
 # 🛡️ TPM Cryptenroll GUI
 
-
 [**Français**](#français) | [**English**](#english)
 
 ---
-
-<a name="français"></a>
 ## 🇫🇷 Français
 
 ### 📋 Présentation
@@ -17,6 +14,8 @@ Cette interface graphique (GUI) simplifie l'utilisation de `systemd-cryptenroll`
 * **Modes d'enrôlement** : Supporte l'enrôlement TPM simple ou avec code PIN.
 * **Sécurité** : Option pour effacer les anciens slots TPM2 afin d'éviter les conflits.
 * **Multilingue** : Interface automatique en Français ou Anglais selon la langue du système.
+<img src="screenshot.jpg" alt="Aperçu de l'interface TPM Enrollment GUI" width="50%">
+<a name="français"></a>
 
 ### 🚀 Installation & Utilisation
 
@@ -64,6 +63,8 @@ This Graphical User Interface (GUI) simplifies the use of `systemd-cryptenroll` 
 * **Enrollment Modes**: Supports both simple TPM enrollment and TPM with a PIN code.
 * **Security**: Option to wipe existing TPM2 slots to prevent conflicts.
 * **Multilingual**: Automatic interface in French or English based on your system language.
+<img src="screenshot.jpg" alt="Aperçu de l'interface TPM Enrollment GUI" width="50%">
+<a name="français"></a>
 
 ### 🚀 Installation & Usage
 
